@@ -13,9 +13,7 @@ from models.mortgage_credit import MortgageCredit
 from controllers.credit_manager import CreditManager
 from views.console_menu import ConsoleMenu
 
-# ==========================================
-# MAIN EXECUTION
-# ==========================================
+
 if __name__ == "__main__":
     app = ConsoleMenu()
     app.run()
