@@ -1,0 +1,136 @@
+classDiagram
+    class Person {
+        <<abstract>>
+        -str person_id
+        -str name
+        -str email
+        -str phone
+        +__init__(person_id, name, email, phone)
+    }
+
+    class Analyst {
+        -str employee_code
+        -float approval_limit
+        +__init__(person_id, name, email, phone, employee_code, approval_limit)
+    }
+
+    class Customer {
+        <<abstract>>
+        -float monthly_income
+        -str credit_history
+        +__init__(person_id, name, email, phone, monthly_income)
+        +validate_income(income)
+    }
+
+    class IndividualCustomer {
+        -str dni
+        -str workplace
+        +__init__(person_id, name, email, phone, monthly_income, dni, workplace)
+    }
+
+    class CorporateCustomer {
+        -str ruc
+        -str company_name
+        -int years_in_operation
+        +__init__(person_id, name, email, phone, monthly_income, ruc, company_name, years_in_operation)
+    }
+
+    class CreditApplication {
+        <<abstract>>
+        -str application_id
+        -Customer customer
+        -float amount
+        -int months
+        -float tea
+        -str status
+        -PaymentSchedule schedule
+        +__init__(application_id, customer, amount, months, tea)
+        +evaluate_risk()* bool
+        +show_summary() void
+    }
+
+    class PersonalCredit {
+        -bool requires_guarantor
+        +__init__(application_id, customer, amount, months, tea, requires_guarantor)
+        +evaluate_risk() bool
+    }
+
+    class VehicleCredit {
+        -float down_payment
+        +__init__(application_id, customer, amount, months, tea, down_payment)
+        +evaluate_risk() bool
+    }
+
+    class MortgageCredit {
+        -float property_value
+        +__init__(application_id, customer, amount, months, tea, property_value)
+        +evaluate_risk() bool
+    }
+
+    class Installment {
+        -int number
+        -float principal
+        -float interest
+        -float total
+        -float balance
+        +__init__(number, principal, interest, total, balance)
+    }
+
+    class PaymentSchedule {
+        -List~Installment~ installments
+        +calculate_amortization(amount, months, tea) void
+        +show_schedule() void
+    }
+
+    class CreditManager {
+        -List~Customer~ _customers
+        -List~CreditApplication~ _applications
+        +__init__()
+        +add_customer(customer)
+        +add_application(application)
+        +evaluate_application(app_id)
+        +list_applications_by_customer_and_status(customer_id, status)
+        +list_applications_by_customer_and_unapproved(customer_id)
+        +get_customers() List~Customer~
+        +get_customer_by_id(person_id) Customer
+        +get_first_customer() Customer
+    }
+
+    class ConsoleMenu {
+        -CreditManager _manager
+        +__init__()
+        -_get_string_input(prompt) str
+        -_get_float_input(prompt) float
+        -_get_int_input(prompt) int
+        -_select_customer() Customer
+        +run()
+    }
+
+    class InvalidDataException {
+        -str message
+        +__init__(message)
+    }
+
+    Person <|-- Analyst
+    Person <|-- Customer
+    Customer <|-- IndividualCustomer
+    Customer <|-- CorporateCustomer
+
+    CreditApplication <|-- PersonalCredit
+    CreditApplication <|-- VehicleCredit
+    CreditApplication <|-- MortgageCredit
+
+    CreditApplication "1" *-- "1" PaymentSchedule : contains
+    PaymentSchedule "1" *-- "*" Installment : composed of
+    CreditApplication "*" o-- "1" Customer : requested by
+
+    CreditManager "1" o-- "*" Customer : manages
+    CreditManager "1" o-- "*" CreditApplication : manages
+
+    ConsoleMenu "1" o-- "1" CreditManager : uses
+
+    Customer ..> InvalidDataException : throws
+    IndividualCustomer ..> InvalidDataException : throws
+    CorporateCustomer ..> InvalidDataException : throws
+    PaymentSchedule ..> InvalidDataException : throws
+    CreditApplication ..> InvalidDataException : throws
