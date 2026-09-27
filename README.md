@@ -4,6 +4,8 @@ Este proyecto es un **Sistema de Gestión de Créditos** implementado en Python.
 
 ## Estructura del Proyecto
 
+![Diagrama de Componentes](./diagrama_componentes.png)
+
 El código fuente está dividido en múltiples módulos organizados según el patrón de diseño Arquitectura MVC (Modelo-Vista-Controlador):
 
 - `main.py`: Punto de entrada de la aplicación.
@@ -21,6 +23,8 @@ El código fuente está dividido en múltiples módulos organizados según el pa
 ---
 
 ## Diagrama de Clases (Arquitectura Conceptual)
+
+![Diagrama de Clases](./diagrama_clases.png)
 
 ### 1. Jerarquía de Personas y Clientes
 El sistema define una base abstracta para entidades que interactúan con el banco.
@@ -53,6 +57,8 @@ Las solicitudes de crédito manejan su propio riesgo a través de polimorfismo.
 ---
 
 ## Flujo de Trabajo y Cálculos Financieros
+
+![Diagrama de Flujo](./diagrama_flujo.png)
 
 ### Sistema de Amortización Francesa
 El método `calculate_amortization` dentro de `PaymentSchedule` aplica la siguiente lógica matemática:

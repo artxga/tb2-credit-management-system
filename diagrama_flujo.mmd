@@ -1,38 +1,42 @@
 flowchart TD
-    Start([Inicio de Aplicación]) --> Menu{Menú Principal (9 opciones)}
+    Start(["Inicio de Aplicación"]) --> Menu{"Menú Principal (9 opciones)"}
     
     %% Opciones 1 y 2
-    Menu -->|1. Register Customer| InputClient[Elegir Natural/Corporativo y llenar datos]
-    InputClient --> ValidateClient{Datos Válidos?}
-    ValidateClient -->|Sí| RegisterClient[Genera ID y Almacena Cliente]
-    ValidateClient -->|No| CatchError[Muestra Error] --> Menu
+    Menu -->|1. Register Customer| InputClient["Elegir Natural/Corporativo y llenar datos"]
+    InputClient --> ValidateClient{"Datos Válidos?"}
+    ValidateClient -->|Sí| RegisterClient["Genera ID y Almacena Cliente"]
+    ValidateClient -->|No| CatchError["Muestra Error"]
+    CatchError --> Menu
     RegisterClient --> Menu
 
-    Menu -->|2. Register Analyst| InputAnalyst[Llenar datos y Límite de Aprobación]
-    InputAnalyst --> RegisterAnalyst[Genera ID y Almacena Analista]
+    Menu -->|2. Register Analyst| InputAnalyst["Llenar datos y Límite de Aprobación"]
+    InputAnalyst --> RegisterAnalyst["Genera ID y Almacena Analista"]
     RegisterAnalyst --> Menu
 
     %% Opción 5
-    Menu -->|5. Create Credit App| SelectClient[Seleccionar Cliente]
-    SelectClient -->|Seleccionado| ChooseCredit[Elegir: Personal, Vehicular o Hipotecario]
-    ChooseCredit --> InputCredit[Ingreso de datos requeridos del crédito]
-    InputCredit --> ValidateCredit{Montos/Plazos válidos?}
-    ValidateCredit -->|Sí| CreateCredit[Almacena Solicitud PENDING]
+    Menu -->|5. Create Credit App| SelectClient["Seleccionar Cliente"]
+    SelectClient -->|Seleccionado| ChooseCredit["Elegir: Personal, Vehicular o Hipotecario"]
+    ChooseCredit --> InputCredit["Ingreso de datos requeridos del crédito"]
+    InputCredit --> ValidateCredit{"Montos y Plazos válidos?"}
+    ValidateCredit -->|Sí| CreateCredit["Almacena Solicitud PENDING"]
     ValidateCredit -->|No| CatchError
     CreateCredit --> Menu
 
     %% Opción 6
-    Menu -->|6. Evaluate Application| InputAppID[Ingresar ID de Solicitud]
-    InputAppID --> SelectAnalyst[Seleccionar Analista de Lista]
-    SelectAnalyst --> CheckLimit{Monto <= Límite Analista?}
-    CheckLimit -->|No| RejectLimit[Rechazo Automático por Límite] --> Menu
-    CheckLimit -->|Sí| EvaluateRule{Pasa reglas de riesgo propias del crédito?}
-    EvaluateRule -->|Sí| Approve[Estado = APPROVED y Genera Cronograma] --> Menu
-    EvaluateRule -->|No| Reject[Estado = REJECTED] --> Menu
+    Menu -->|6. Evaluate Application| InputAppID["Ingresar ID de Solicitud"]
+    InputAppID --> SelectAnalyst["Seleccionar Analista de Lista"]
+    SelectAnalyst --> CheckLimit{"Monto Menor o Igual al Límite?"}
+    CheckLimit -->|No| RejectLimit["Rechazo Automático por Límite"]
+    RejectLimit --> Menu
+    CheckLimit -->|Sí| EvaluateRule{"Pasa reglas de riesgo propias del crédito?"}
+    EvaluateRule -->|Sí| Approve["Estado = APPROVED y Genera Cronograma"]
+    Approve --> Menu
+    EvaluateRule -->|No| Reject["Estado = REJECTED"]
+    Reject --> Menu
 
     %% Opciones de listado
-    Menu -->|3, 4, 7, 8. Listados| ShowLists[Filtra en Memoria e Imprime Resultados]
+    Menu -->|"3, 4, 7, 8. Listados"| ShowLists["Filtra en Memoria e Imprime Resultados"]
     ShowLists --> Menu
 
     %% Salida
-    Menu -->|9. Exit| End([Fin de Aplicación])
+    Menu -->|9. Exit| End(["Fin de Aplicación"])
