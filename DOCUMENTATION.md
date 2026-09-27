@@ -86,8 +86,10 @@ python main.py
 ```
 
 El menú provee las siguientes opciones interactivas:
-1. **Register Test Customer**: Instancia y guarda un `IndividualCustomer` de prueba.
-2. **Create Personal Credit App**: Toma el primer cliente registrado y le crea una solicitud de `PersonalCredit`.
-3. **Evaluate Application**: Solicita un ID de aplicación (ej. `APP-100`) y evalúa sus reglas de riesgo. Si es aprobada, genera su cronograma.
-4. **List Approved Applications**: Lista el resumen y los cronogramas de pagos de las solicitudes que tienen estado `APPROVED`.
-5. **Exit**: Termina la ejecución.
+1. **Register Customer**: Solicita interactivamente los datos para registrar a un `IndividualCustomer`.
+2. **List Customers**: Muestra una lista de todos los clientes registrados.
+3. **Create Personal Credit App**: Permite seleccionar a un cliente registrado y solicita interactivamente los datos para crear una solicitud de `PersonalCredit`.
+4. **Evaluate Application**: Solicita un ID de aplicación (ej. `APP-100`) y evalúa sus reglas de riesgo. Si es aprobada, genera su cronograma.
+5. **List Approved Applications**: Permite seleccionar a un cliente y lista las solicitudes de ese cliente que tengan estado `APPROVED`.
+6. **List Unapproved Applications**: Permite seleccionar a un cliente y lista las solicitudes de ese cliente que no estén aprobadas (ej. `PENDING`, `REJECTED`).
+7. **Exit**: Termina la ejecución.
