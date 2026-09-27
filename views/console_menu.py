@@ -153,8 +153,9 @@ class ConsoleMenu:
                         requires_guarantor = req_guarantor_input == 'y'
                         app = PersonalCredit(app_id, customer, amount=amount, months=months, tea=tea, requires_guarantor=requires_guarantor)
                     elif cred_type == '2':
+                        vehicle_value = self._get_float_input("Enter Vehicle Value: ")
                         down_payment = self._get_float_input("Enter Down Payment: ")
-                        app = VehicleCredit(app_id, customer, amount=amount, months=months, tea=tea, down_payment=down_payment)
+                        app = VehicleCredit(app_id, customer, amount=amount, months=months, tea=tea, vehicle_value=vehicle_value, down_payment=down_payment)
                     elif cred_type == '3':
                         property_value = self._get_float_input("Enter Property Value: ")
                         app = MortgageCredit(app_id, customer, amount=amount, months=months, tea=tea, property_value=property_value)

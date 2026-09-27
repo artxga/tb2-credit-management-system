@@ -58,6 +58,21 @@ Las solicitudes de crédito manejan su propio riesgo a través de polimorfismo.
 
 ## Flujo de Trabajo y Cálculos Financieros
 
+### Reglas de Aprobación de Riesgo por Tipo de Crédito
+Cada clase derivada de `CreditApplication` implementa su propia lógica en el método polimórfico `evaluate_risk()`:
+
+1. **Crédito Personal (`PersonalCredit`)**
+   - El **Ingreso Mensual** del cliente debe ser mayor o igual a **$2000**.
+   - La **Cuota Estimada** (calculada temporalmente como `monto / meses`) no debe representar más del **40%** de los ingresos mensuales del cliente.
+
+2. **Crédito Vehicular (`VehicleCredit`)**
+   - El cliente debe dar una **Cuota Inicial** (`down_payment`) que sea al menos el **20%** del valor total del vehículo (`vehicle_value`).
+   - El **Monto Solicitado** del préstamo no puede superar el resto a financiar (es decir, el valor del vehículo menos la cuota inicial).
+
+3. **Crédito Hipotecario (`MortgageCredit`)**
+   - El plazo del préstamo **no puede exceder los 300 meses** (25 años).
+   - El **Monto Solicitado** no puede exceder el **90%** del valor de la propiedad a comprar (`property_value`).
+
 ![Diagrama de Flujo](./diagrama_flujo.png)
 
 ### Sistema de Amortización Francesa

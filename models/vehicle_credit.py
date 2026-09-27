@@ -10,8 +10,13 @@ class VehicleCredit(CreditApplication):
 
     def evaluate_risk(self) -> bool:
         # Rule: Down payment must be at least 20% of the vehicle value
-        if (self._down_payment / self._vehicle_value) >= 0.20 and self._amount <= (self._vehicle_value - self._down_payment):
-            self.approve()
-            return True
-        self.reject()
-        return False
+        if (self._down_payment / self._vehicle_value) < 0.20:
+            self.reject(f"Cuota inicial (${self._down_payment:.2f}) es menor al 20% del valor del vehículo (${self._vehicle_value:.2f}).")
+            return False
+            
+        if self._amount > (self._vehicle_value - self._down_payment):
+            self.reject(f"Monto solicitado (${self._amount:.2f}) excede el restante a financiar (${self._vehicle_value - self._down_payment:.2f}).")
+            return False
+            
+        self.approve()
+        return True

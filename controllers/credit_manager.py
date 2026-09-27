@@ -42,12 +42,15 @@ class CreditManager:
             return
 
         if not analyst.can_approve(app.amount):
-            print(f"Analyst {analyst.name} does not have the approval limit to evaluate this application (Limit: ${analyst._approval_limit}, Requested: ${app.amount}).")
-            app.reject()
+            reason = f"El analista {analyst.name} no tiene el límite de aprobación suficiente (Límite: ${analyst._approval_limit}, Solicitado: ${app.amount})."
+            print(reason)
+            app.reject(reason)
             return
 
         is_approved = app.evaluate_risk()
         print(f"Evaluation finished by Analyst {analyst.name}. Status: {app.status}")
+        if not is_approved:
+            print(f"   -> Motivo del rechazo: {app.rejection_reason}")
 
     def list_applications_by_customer_and_status(self, customer_id: str, status: str):
         filtered = [app for app in self._applications if app.customer.person_id == customer_id and app.status == status.upper()]

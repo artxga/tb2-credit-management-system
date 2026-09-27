@@ -9,8 +9,13 @@ class MortgageCredit(CreditApplication):
 
     def evaluate_risk(self) -> bool:
         # Rule: Max term is 300 months, Loan <= 90% of property value
-        if self._months <= 300 and self._amount <= (self._property_value * 0.90):
-            self.approve()
-            return True
-        self.reject()
-        return False
+        if self._months > 300:
+            self.reject(f"Plazo solicitado ({self._months} meses) excede el máximo permitido (300 meses).")
+            return False
+            
+        if self._amount > (self._property_value * 0.90):
+            self.reject(f"Monto solicitado (${self._amount:.2f}) excede el 90% del valor de la propiedad (${self._property_value * 0.90:.2f}).")
+            return False
+            
+        self.approve()
+        return True
