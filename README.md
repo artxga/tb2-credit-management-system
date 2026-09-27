@@ -4,16 +4,19 @@ Este proyecto es un **Sistema de Gestión de Créditos** implementado en Python.
 
 ## Estructura del Proyecto
 
-El código fuente está dividido en múltiples módulos, cada uno enfocado en una responsabilidad específica (Single Responsibility Principle):
+El código fuente está dividido en múltiples módulos organizados según el patrón de diseño Arquitectura MVC (Modelo-Vista-Controlador):
 
 - `main.py`: Punto de entrada de la aplicación.
-- `console_menu.py`: Interfaz de línea de comandos (CLI) para la interacción con el usuario.
-- `credit_manager.py`: Controlador principal que gestiona la lógica de negocio, clientes y solicitudes.
-- Módulos de Modelos:
+- `models/`: Contiene la lógica de dominio y los modelos de datos.
   - **Personas y Clientes**: `person.py`, `customer.py`, `individual_customer.py`, `corporate_customer.py`, `analyst.py`.
   - **Créditos**: `credit_application.py`, `personal_credit.py`, `vehicle_credit.py`, `mortgage_credit.py`.
   - **Pagos**: `payment_schedule.py`, `installment.py`.
-- **Excepciones**: `invalid_data_exception.py`.
+- `views/`:
+  - `console_menu.py`: Interfaz de línea de comandos (CLI) para la interacción con el usuario.
+- `controllers/`:
+  - `credit_manager.py`: Controlador principal que gestiona la lógica de negocio, clientes y solicitudes.
+- `exceptions/`:
+  - `invalid_data_exception.py`: Excepciones personalizadas para validación de dominio.
 
 ---
 
@@ -73,11 +76,17 @@ Una solicitud de crédito (`CreditApplication`) transita por los siguientes esta
 - `REJECTED`: Asignado si la evaluación de riesgo falla.
 
 ## Excepciones y Validación de Datos
-El sistema utiliza una excepción personalizada llamada **`InvalidDataException`** para encapsular errores de lógica de negocio y validación, como:
+El sistema utiliza una excepción personalizada llamada **`InvalidDataException`** para encapsular errores de lógica de negocio y validación de entidades, como:
 - Ingresos mensuales negativos.
 - DNI con longitud distinta de 8 caracteres.
 - RUC con longitud distinta de 11 caracteres.
-- Monto o meses de crédito menores o iguales a cero.
+- Monto o plazos de crédito menores o iguales a cero.
+
+Adicionalmente, la capa de Vista (`console_menu.py`) cuenta con **Manejo Robusto de Errores e Ingreso de Datos**:
+- Validaciones continuas en bucle para prevenir que el programa colapse al recibir tipos de datos incorrectos (ej. escribir letras en lugar de números).
+- Prevención de entradas vacías o en blanco.
+- Autogeneración robusta de identificadores únicos para clientes y aplicaciones usando la librería `uuid`.
+- Permite cancelar selecciones en curso devolviendo el valor `0`.
 
 ## Ejecución del Sistema
 Para iniciar la aplicación interactiva, se debe ejecutar el archivo principal:

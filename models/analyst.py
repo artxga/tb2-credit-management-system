@@ -1,4 +1,4 @@
-from person import Person
+from models.person import Person
 
 class Analyst(Person):
     """Represents a bank credit analyst."""

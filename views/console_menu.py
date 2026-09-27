@@ -1,13 +1,34 @@
 import uuid
-from credit_manager import CreditManager
-from individual_customer import IndividualCustomer
-from personal_credit import PersonalCredit
-from invalid_data_exception import InvalidDataException
+from controllers.credit_manager import CreditManager
+from models.individual_customer import IndividualCustomer
+from models.personal_credit import PersonalCredit
+from exceptions.invalid_data_exception import InvalidDataException
 
 class ConsoleMenu:
     """Handles CLI User Interface."""
     def __init__(self):
         self._manager = CreditManager()
+
+    def _get_string_input(self, prompt: str) -> str:
+        while True:
+            value = input(prompt).strip()
+            if value:
+                return value
+            print("Input cannot be empty. Please try again.")
+
+    def _get_float_input(self, prompt: str) -> float:
+        while True:
+            try:
+                return float(self._get_string_input(prompt))
+            except ValueError:
+                print("Invalid input. Please enter a valid number.")
+
+    def _get_int_input(self, prompt: str) -> int:
+        while True:
+            try:
+                return int(self._get_string_input(prompt))
+            except ValueError:
+                print("Invalid input. Please enter a valid integer.")
 
     def _select_customer(self):
         customers = self._manager.get_customers()
@@ -19,15 +40,13 @@ class ConsoleMenu:
         for i, cust in enumerate(customers, 1):
             print(f"{i}. {cust.name} (ID: {cust.person_id})")
         
-        try:
-            cust_idx = int(input("Select customer number: ")) - 1
-            if cust_idx < 0 or cust_idx >= len(customers):
-                print("Invalid selection.")
+        while True:
+            cust_idx = self._get_int_input("Select customer number (0 to cancel): ")
+            if cust_idx == 0:
                 return None
-            return customers[cust_idx]
-        except ValueError:
-            print("Invalid input.")
-            return None
+            if 1 <= cust_idx <= len(customers):
+                return customers[cust_idx - 1]
+            print("Invalid selection. Please select a valid number.")
 
     def run(self):
         while True:
@@ -39,22 +58,22 @@ class ConsoleMenu:
             print("5. List Approved Applications")
             print("6. List Unapproved Applications")
             print("7. Exit")
-            choice = input("Select an option: ")
+            choice = input("Select an option: ").strip()
 
             try:
                 if choice == '1':
                     print("\n--- Register Customer ---")
                     person_id = f"C-{uuid.uuid4().hex[:6].upper()}"
-                    name = input("Enter Name: ")
-                    email = input("Enter Email: ")
-                    phone = input("Enter Phone: ")
-                    monthly_income = float(input("Enter Monthly Income: "))
-                    dni = input("Enter DNI (8 digits): ")
-                    workplace = input("Enter Workplace: ")
+                    name = self._get_string_input("Enter Name: ")
+                    email = self._get_string_input("Enter Email: ")
+                    phone = self._get_string_input("Enter Phone: ")
+                    monthly_income = self._get_float_input("Enter Monthly Income: ")
+                    dni = self._get_string_input("Enter DNI (8 digits): ")
+                    workplace = self._get_string_input("Enter Workplace: ")
                     
                     cust = IndividualCustomer(person_id, name, email, phone, monthly_income, dni, workplace)
                     self._manager.add_customer(cust)
-                    print(f"Customer registered successfully with ID: {person_id}")
+                    print(f"Customer registered successfully con ID: {person_id}")
                 elif choice == '2':
                     print("\n--- List Customers ---")
                     customers = self._manager.get_customers()
@@ -71,17 +90,17 @@ class ConsoleMenu:
                     print("\n--- Create Personal Credit App ---")
                     print(f"Creating app for customer: {customer.name}")
                     app_id = f"APP-{uuid.uuid4().hex[:6].upper()}"
-                    amount = float(input("Enter Amount: "))
-                    months = int(input("Enter Months: "))
-                    tea = float(input("Enter TEA (e.g. 0.15 for 15%): "))
-                    req_guarantor_input = input("Requires guarantor? (y/n): ").strip().lower()
+                    amount = self._get_float_input("Enter Amount: ")
+                    months = self._get_int_input("Enter Months: ")
+                    tea = self._get_float_input("Enter TEA (e.g. 0.15 for 15%): ")
+                    req_guarantor_input = self._get_string_input("Requires guarantor? (y/n): ").lower()
                     requires_guarantor = req_guarantor_input == 'y'
                     
                     app = PersonalCredit(app_id, customer, amount=amount, months=months, tea=tea, requires_guarantor=requires_guarantor)
                     self._manager.add_application(app)
                     print(f"Credit Application created successfully with ID: {app_id}")
                 elif choice == '4':
-                    app_id = input("Enter Application ID (e.g. APP-100): ")
+                    app_id = self._get_string_input("Enter Application ID (e.g. APP-100): ")
                     self._manager.evaluate_application(app_id)
                 elif choice == '5':
                     customer = self._select_customer()

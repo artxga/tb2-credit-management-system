@@ -1,5 +1,5 @@
-from customer import Customer
-from invalid_data_exception import InvalidDataException
+from models.customer import Customer
+from exceptions.invalid_data_exception import InvalidDataException
 
 class IndividualCustomer(Customer):
     """Represents an individual person customer."""

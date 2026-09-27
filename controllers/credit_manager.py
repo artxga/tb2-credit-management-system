@@ -1,6 +1,6 @@
 from typing import List, Optional
-from customer import Customer
-from credit_application import CreditApplication
+from models.customer import Customer
+from models.credit_application import CreditApplication
 
 class CreditManager:
     """Controller class managing central lists and business logic."""

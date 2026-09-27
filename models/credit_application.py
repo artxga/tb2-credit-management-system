@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
-from customer import Customer
-from payment_schedule import PaymentSchedule
-from invalid_data_exception import InvalidDataException
+from models.customer import Customer
+from models.payment_schedule import PaymentSchedule
+from exceptions.invalid_data_exception import InvalidDataException
 
 class CreditApplication(ABC):
     """Abstract base class for credit applications."""

@@ -1,5 +1,5 @@
-from credit_application import CreditApplication
-from customer import Customer
+from models.credit_application import CreditApplication
+from models.customer import Customer
 
 class PersonalCredit(CreditApplication):
     """Personal loan implementation."""

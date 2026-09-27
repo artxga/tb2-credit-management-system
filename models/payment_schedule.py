@@ -1,6 +1,6 @@
 from typing import List
-from installment import Installment
-from invalid_data_exception import InvalidDataException
+from models.installment import Installment
+from exceptions.invalid_data_exception import InvalidDataException
 
 class PaymentSchedule:
     """Manages the list of installments using French Amortization."""

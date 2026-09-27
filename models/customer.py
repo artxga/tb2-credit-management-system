@@ -1,5 +1,5 @@
-from person import Person
-from invalid_data_exception import InvalidDataException
+from models.person import Person
+from exceptions.invalid_data_exception import InvalidDataException
 
 class Customer(Person):
     """Base class for bank customers."""

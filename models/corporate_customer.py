@@ -1,5 +1,5 @@
-from customer import Customer
-from invalid_data_exception import InvalidDataException
+from models.customer import Customer
+from exceptions.invalid_data_exception import InvalidDataException
 
 class CorporateCustomer(Customer):
     """Represents a corporate/business customer."""
