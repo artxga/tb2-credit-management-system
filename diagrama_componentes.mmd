@@ -8,7 +8,7 @@ flowchart TD
     end
 
     subgraph Models [Capa de Modelos]
-        Person[Person / Customer]
+        Person[Person / Customer / Analyst]
         Credit[CreditApplication]
         Payment[PaymentSchedule / Installment]
     end
@@ -17,15 +17,15 @@ flowchart TD
         IDE[InvalidDataException]
     end
 
-    User((Usuario)) -->|Interacciones CLI| CLI
+    User((Usuario)) -->|Interacciones (Opciones 1 al 9)| CLI
     
-    CLI -->|Maneja flujo y llama a| CM
+    CLI -->|Maneja flujo y transfiere datos a| CM
     CLI -.->|Atrapa excepciones| IDE
 
     CM -->|Crea y Almacena| Person
-    CM -->|Gestiona e Invoca evaluación| Credit
+    CM -->|Gestiona e Invoca evaluación delegada| Credit
     
-    Credit -->|Si es aprobado, genera| Payment
-    Credit -.->|Valida y lanza| IDE
-    Person -.->|Valida y lanza| IDE
-    Payment -.->|Valida y lanza| IDE
+    Credit -->|Si es aprobado, calcula y genera| Payment
+    Credit -.->|Valida reglas y lanza| IDE
+    Person -.->|Valida reglas y lanza| IDE
+    Payment -.->|Valida matemática y lanza| IDE

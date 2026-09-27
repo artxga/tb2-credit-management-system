@@ -1,68 +1,82 @@
 classDiagram
+    %% ==========================================
+    %% LEYENDA DE HERENCIA EN UML
+    %% En Mermaid y UML, la flecha con triángulo vacío apunta 
+    %% siempre hacia la clase PADRE (Superclase).
+    %% ==========================================
+
     class Person {
-        <<abstract>>
-        -str person_id
-        -str name
-        -str email
-        -str phone
+        -str _person_id
+        -str _name
+        -str _email
+        -str _phone
         +__init__(person_id, name, email, phone)
+        +person_id() str
+        +name() str
+        +show_details()* str
     }
 
     class Analyst {
-        -str employee_code
-        -float approval_limit
+        -str _employee_code
+        -float _approval_limit
         +__init__(person_id, name, email, phone, employee_code, approval_limit)
+        +can_approve(amount) bool
+        +show_details() str
     }
 
     class Customer {
-        <<abstract>>
-        -float monthly_income
-        -str credit_history
+        -float _monthly_income
+        -str _credit_history
         +__init__(person_id, name, email, phone, monthly_income)
         +validate_income(income)
     }
 
     class IndividualCustomer {
-        -str dni
-        -str workplace
+        -str _dni
+        -str _workplace
         +__init__(person_id, name, email, phone, monthly_income, dni, workplace)
     }
 
     class CorporateCustomer {
-        -str ruc
-        -str company_name
-        -int years_in_operation
+        -str _ruc
+        -str _company_name
+        -int _years_in_operation
         +__init__(person_id, name, email, phone, monthly_income, ruc, company_name, years_in_operation)
     }
 
     class CreditApplication {
-        <<abstract>>
-        -str application_id
-        -Customer customer
-        -float amount
-        -int months
-        -float tea
-        -str status
-        -PaymentSchedule schedule
+        -str _application_id
+        -Customer _customer
+        -float _amount
+        -int _months
+        -float _tea
+        -str _status
+        -PaymentSchedule _schedule
         +__init__(application_id, customer, amount, months, tea)
+        +application_id() str
+        +customer() Customer
+        +amount() float
+        +status() str
         +evaluate_risk()* bool
+        +approve() void
+        +reject() void
         +show_summary() void
     }
 
     class PersonalCredit {
-        -bool requires_guarantor
+        -bool _requires_guarantor
         +__init__(application_id, customer, amount, months, tea, requires_guarantor)
         +evaluate_risk() bool
     }
 
     class VehicleCredit {
-        -float down_payment
+        -float _down_payment
         +__init__(application_id, customer, amount, months, tea, down_payment)
         +evaluate_risk() bool
     }
 
     class MortgageCredit {
-        -float property_value
+        -float _property_value
         +__init__(application_id, customer, amount, months, tea, property_value)
         +evaluate_risk() bool
     }
@@ -77,23 +91,25 @@ classDiagram
     }
 
     class PaymentSchedule {
-        -List~Installment~ installments
-        +calculate_amortization(amount, months, tea) void
+        -List~Installment~ _installments
+        +calculate_amortization(amount, tea, months) void
         +show_schedule() void
     }
 
     class CreditManager {
         -List~Customer~ _customers
         -List~CreditApplication~ _applications
+        -List~Analyst~ _analysts
         +__init__()
+        +add_analyst(analyst)
+        +get_analysts() List~Analyst~
         +add_customer(customer)
         +add_application(application)
-        +evaluate_application(app_id)
+        +evaluate_application(app_id, analyst_id)
         +list_applications_by_customer_and_status(customer_id, status)
         +list_applications_by_customer_and_unapproved(customer_id)
         +get_customers() List~Customer~
         +get_customer_by_id(person_id) Customer
-        +get_first_customer() Customer
     }
 
     class ConsoleMenu {
@@ -111,21 +127,24 @@ classDiagram
         +__init__(message)
     }
 
-    Person <|-- Analyst
-    Person <|-- Customer
-    Customer <|-- IndividualCustomer
-    Customer <|-- CorporateCustomer
+    %% HERENCIA (PADRE <|-- HIJO)
+    Person <|-- Analyst : Analyst hereda de Person
+    Person <|-- Customer : Customer hereda de Person
+    Customer <|-- IndividualCustomer : IndividualCustomer hereda de Customer
+    Customer <|-- CorporateCustomer : CorporateCustomer hereda de Customer
 
-    CreditApplication <|-- PersonalCredit
-    CreditApplication <|-- VehicleCredit
-    CreditApplication <|-- MortgageCredit
+    CreditApplication <|-- PersonalCredit : PersonalCredit hereda de CreditApp
+    CreditApplication <|-- VehicleCredit : VehicleCredit hereda de CreditApp
+    CreditApplication <|-- MortgageCredit : MortgageCredit hereda de CreditApp
 
+    %% COMPOSICIÓN / AGREGACIÓN
     CreditApplication "1" *-- "1" PaymentSchedule : contains
     PaymentSchedule "1" *-- "*" Installment : composed of
     CreditApplication "*" o-- "1" Customer : requested by
 
     CreditManager "1" o-- "*" Customer : manages
     CreditManager "1" o-- "*" CreditApplication : manages
+    CreditManager "1" o-- "*" Analyst : manages
 
     ConsoleMenu "1" o-- "1" CreditManager : uses
 

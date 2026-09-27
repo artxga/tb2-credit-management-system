@@ -1,35 +1,38 @@
 flowchart TD
-    Start([Inicio de Aplicación]) --> Menu{Menú Principal}
+    Start([Inicio de Aplicación]) --> Menu{Menú Principal (9 opciones)}
     
-    %% Opción 1: Registro de Cliente
-    Menu -->|1. Register Customer| InputClient[Ingreso interactivo de datos]
+    %% Opciones 1 y 2
+    Menu -->|1. Register Customer| InputClient[Elegir Natural/Corporativo y llenar datos]
     InputClient --> ValidateClient{Datos Válidos?}
-    ValidateClient -->|No| CatchClient[Atrapa InvalidDataException y Muestra Error]
-    CatchClient --> Menu
     ValidateClient -->|Sí| RegisterClient[Genera ID y Almacena Cliente]
+    ValidateClient -->|No| CatchError[Muestra Error] --> Menu
     RegisterClient --> Menu
 
-    %% Opción 3: Crear Solicitud
-    Menu -->|3. Create Personal Credit| SelectClient[Seleccionar Cliente de Lista]
-    SelectClient -->|Cliente elegido| InputCredit[Ingreso de datos del préstamo]
+    Menu -->|2. Register Analyst| InputAnalyst[Llenar datos y Límite de Aprobación]
+    InputAnalyst --> RegisterAnalyst[Genera ID y Almacena Analista]
+    RegisterAnalyst --> Menu
+
+    %% Opción 5
+    Menu -->|5. Create Credit App| SelectClient[Seleccionar Cliente]
+    SelectClient -->|Seleccionado| ChooseCredit[Elegir: Personal, Vehicular o Hipotecario]
+    ChooseCredit --> InputCredit[Ingreso de datos requeridos del crédito]
     InputCredit --> ValidateCredit{Montos/Plazos válidos?}
-    ValidateCredit -->|No| CatchCredit[Atrapa InvalidDataException y Muestra Error]
-    CatchCredit --> Menu
-    ValidateCredit -->|Sí| CreateCredit[Genera Solicitud PENDING y Almacena]
+    ValidateCredit -->|Sí| CreateCredit[Almacena Solicitud PENDING]
+    ValidateCredit -->|No| CatchError
     CreateCredit --> Menu
 
-    %% Opción 4: Evaluación
-    Menu -->|4. Evaluate Application| InputAppID[Ingresar ID de Solicitud]
-    InputAppID --> EvaluateRule{Pasa reglas de riesgo?}
-    EvaluateRule -->|Reglas Cumplidas| Approve[Estado = APPROVED]
-    Approve --> GenSchedule[Calcula Amortización y Cronograma]
-    GenSchedule --> Menu
-    EvaluateRule -->|Reglas Fallidas| Reject[Estado = REJECTED]
-    Reject --> Menu
+    %% Opción 6
+    Menu -->|6. Evaluate Application| InputAppID[Ingresar ID de Solicitud]
+    InputAppID --> SelectAnalyst[Seleccionar Analista de Lista]
+    SelectAnalyst --> CheckLimit{Monto <= Límite Analista?}
+    CheckLimit -->|No| RejectLimit[Rechazo Automático por Límite] --> Menu
+    CheckLimit -->|Sí| EvaluateRule{Pasa reglas de riesgo propias del crédito?}
+    EvaluateRule -->|Sí| Approve[Estado = APPROVED y Genera Cronograma] --> Menu
+    EvaluateRule -->|No| Reject[Estado = REJECTED] --> Menu
 
-    %% Opciones 2, 5, 6: Listados
-    Menu -->|2, 5, 6. Opciones de Listado| ShowLists[Filtra en Memoria e Imprime Resultados]
+    %% Opciones de listado
+    Menu -->|3, 4, 7, 8. Listados| ShowLists[Filtra en Memoria e Imprime Resultados]
     ShowLists --> Menu
 
     %% Salida
-    Menu -->|7. Exit| End([Fin de Aplicación])
+    Menu -->|9. Exit| End([Fin de Aplicación])

@@ -43,7 +43,7 @@ class CreditManager:
 
         if not analyst.can_approve(app.amount):
             print(f"Analyst {analyst.name} does not have the approval limit to evaluate this application (Limit: ${analyst._approval_limit}, Requested: ${app.amount}).")
-            app.status = "REJECTED"
+            app.reject()
             return
 
         is_approved = app.evaluate_risk()

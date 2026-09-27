@@ -12,6 +12,10 @@ class ConsoleMenu:
     """Handles CLI User Interface."""
     def __init__(self):
         self._manager = CreditManager()
+        a1 = Analyst(f"A-{uuid.uuid4().hex[:6].upper()}", "Ana Torres", "ana@bank.com", "999111222", "EMP01", 10000.0)
+        a2 = Analyst(f"A-{uuid.uuid4().hex[:6].upper()}", "Carlos Ruiz", "carlos@bank.com", "999333444", "EMP02", 500000.0)
+        self._manager.add_analyst(a1)
+        self._manager.add_analyst(a2)
 
     def _get_string_input(self, prompt: str) -> str:
         while True:
@@ -57,12 +61,13 @@ class ConsoleMenu:
             print("\n--- CREDIT MANAGEMENT SYSTEM ---")
             print("1. Register Customer")
             print("2. Register Analyst")
-            print("3. List Customers & Analysts")
-            print("4. Create Credit App")
-            print("5. Evaluate Application")
-            print("6. List Approved Applications")
-            print("7. List Unapproved Applications")
-            print("8. Exit")
+            print("3. List Customers")
+            print("4. List Analysts")
+            print("5. Create Credit App")
+            print("6. Evaluate Application")
+            print("7. List Approved Applications")
+            print("8. List Unapproved Applications")
+            print("9. Exit")
             choice = input("Select an option: ").strip()
 
             try:
@@ -113,6 +118,7 @@ class ConsoleMenu:
                         for cust in customers:
                             print(f"- {cust.name} | ID: {cust.person_id} | Income: {cust.monthly_income}")
                             
+                elif choice == '4':
                     print("\n--- List Analysts ---")
                     analysts = self._manager.get_analysts()
                     if not analysts:
@@ -121,7 +127,7 @@ class ConsoleMenu:
                         for an in analysts:
                             print(f"- {an.name} | ID: {an.person_id} | Limit: ${an._approval_limit}")
                             
-                elif choice == '4':
+                elif choice == '5':
                     customer = self._select_customer()
                     if not customer:
                         continue
@@ -155,7 +161,7 @@ class ConsoleMenu:
                         
                     self._manager.add_application(app)
                     print(f"Credit Application created successfully with ID: {app_id}")
-                elif choice == '5':
+                elif choice == '6':
                     app_id = self._get_string_input("Enter Application ID (e.g. APP-100): ")
                     analysts = self._manager.get_analysts()
                     if not analysts:
@@ -174,17 +180,17 @@ class ConsoleMenu:
                     else:
                         print("Invalid selection.")
                         
-                elif choice == '6':
-                    customer = self._select_customer()
-                    if not customer:
-                        continue
-                    self._manager.list_applications_by_customer_and_status(customer.person_id, "APPROVED")
                 elif choice == '7':
                     customer = self._select_customer()
                     if not customer:
                         continue
-                    self._manager.list_applications_by_customer_and_unapproved(customer.person_id)
+                    self._manager.list_applications_by_customer_and_status(customer.person_id, "APPROVED")
                 elif choice == '8':
+                    customer = self._select_customer()
+                    if not customer:
+                        continue
+                    self._manager.list_applications_by_customer_and_unapproved(customer.person_id)
+                elif choice == '9':
                     print("Exiting system. Goodbye!")
                     break
                 else:

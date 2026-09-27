@@ -20,6 +20,12 @@ class CreditApplication(ABC):
     def application_id(self) -> str: return self._application_id
     
     @property
+    def customer(self) -> Customer: return self._customer
+    
+    @property
+    def amount(self) -> float: return self._amount
+    
+    @property
     def status(self) -> str: return self._status
 
     @abstractmethod
